@@ -14,6 +14,20 @@ async function deployFixture() {
   return { owner, toldSo }
 }
 
+describe('Create and read posts', function () {
+  it('Should create a post', async function () {
+    const { toldSo } = await loadFixture(deployFixture)
+    const title = 'Hello World'
+    const body = 'This is my first post'
+    const [owner, alice, bob] = await ethers.getSigners()
+
+    await toldSo.connect(alice).createPost(title, body)
+    const posts = await toldSo.getPostsByAuthor(alice.address)
+    // console.log(posts)
+    expect(posts[0].body).to.equal(body)
+    expect(posts[0].title).to.equal(title)
+  })
+})
 // describe("Lock", function () {
 //   // We define a fixture to reuse the same setup in every test.
 //   // We use loadFixture to run this setup once, snapshot that state,
